@@ -5,11 +5,8 @@ import (
 	"fmt"
 )
 
-var board island.Board
-
 func main() {
 	fmt.Println("Hello, playground")
-	board := island.NewBoard()
-
-	fmt.Println(board)
+	myIsland := island.NewIsland()
+	fmt.Println(myIsland.Board)
 }
