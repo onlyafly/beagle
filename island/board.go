@@ -1,9 +1,6 @@
 package island
 
-import (
-	"strconv"
-	"strings"
-)
+import "strings"
 
 type Board [][]*Location
 
@@ -12,7 +9,11 @@ func (b Board) String() string {
 	for i := range b {
 		for j := range b[i] {
 			l := b[i][j]
-			s += strconv.Itoa(l.n) + " "
+			if l.Turtle != nil {
+				s += l.Turtle.String() + " "
+			} else {
+				s += "- "
+			}
 		}
 		s = strings.TrimSpace(s)
 		s += "\n"

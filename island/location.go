@@ -4,7 +4,8 @@ import "fmt"
 
 type Location struct {
 	//TODO b Being
-	n int
+	n      int
+	Turtle *Turtle
 }
 
 func (l *Location) String() string {
