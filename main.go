@@ -6,6 +6,7 @@ import (
 	"galapagos/island"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"galapagos/Godeps/_workspace/src/github.com/peterh/liner"
@@ -19,7 +20,7 @@ const (
 
 var (
 	// TODO add functionality for these missing commands
-	commandCompletions = []string{":q" /*":load ", ":reset", ":help",*/, ":p"}
+	commandCompletions = []string{"q", "p", "h"}
 	// TODO wordCompletions    = []string{"def", "update!"}
 )
 
@@ -89,7 +90,7 @@ func main() {
 	// Initialize
 
 	fmt.Printf("Galapagos %s (%s)\n", version, versionDate)
-	fmt.Printf("(Press Ctrl+C or type :q to exit)\n\n")
+	fmt.Printf("(Press Ctrl+C or q to exit, h for help)\n\n")
 
 	ec := island.NewEcosystem()
 	ec.AddTurtle(1, 1)
@@ -112,12 +113,25 @@ func main() {
 		writeLinerHistory(line)
 
 		switch {
-		case input == ":q":
+		case input == "q":
 			return
-		case input == ":p":
+		case input == "p":
 			fmt.Println(ec.Board)
+		case input == "h":
+			fmt.Println("COMMAND  RESULT")
+			fmt.Println("-------  ------------------------")
+			fmt.Println("<enter>  tick + show board")
+			fmt.Println("p        show board")
 		default:
-			ec.Tick()
+			i, err := strconv.Atoi(input)
+			if err == nil {
+				for ; i >= 0; i-- {
+					ec.Tick()
+				}
+			} else {
+				ec.Tick()
+			}
+			fmt.Println(ec.Board)
 		}
 	}
 }

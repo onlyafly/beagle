@@ -4,6 +4,8 @@ import "strings"
 
 type Board [][]*Location
 
+const boardSize = 10
+
 func (b Board) String() string {
 	s := ""
 	for i := range b {
@@ -22,9 +24,45 @@ func (b Board) String() string {
 	return s
 }
 
+func (b Board) Empty(x, y int) bool {
+	return b[x][y].Turtle == nil
+}
+
+func (b Board) EmptyNeighbor(x, y int) (int, int) {
+	left := x - 1
+	if left < 0 {
+		left = boardSize - 1
+	}
+	right := x + 1
+	if right >= boardSize {
+		right = 0
+	}
+	above := y - 1
+	if above < 0 {
+		above = boardSize - 1
+	}
+	below := x + 1
+	if below >= boardSize {
+		below = 0
+	}
+
+	//fmt.Println("left, x, right = ", left, x, right)
+	//fmt.Println("above, y, below = ", above, y, below)
+
+	for _, i := range []int{left, x, right} {
+		for _, j := range []int{above, y, below} {
+			if b.Empty(i, j) {
+				return i, j
+			}
+		}
+	}
+
+	return -1, -1
+}
+
 func NewBoard() Board {
-	ySize := 10
-	xSize := 10
+	ySize := boardSize
+	xSize := boardSize
 
 	// Allocate the top-level slice
 	board := make([][]*Location, ySize)
