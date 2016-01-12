@@ -1,0 +1,13 @@
+{
+	"ImportPath": "galapagos",
+	"GoVersion": "go1.5.2",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/peterh/liner",
+			"Rev": "3f1c20449d1836aa4cbe38731b96f95cdf89634d"
+		}
+	]
+}
