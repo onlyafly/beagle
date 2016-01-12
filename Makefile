@@ -1,6 +1,6 @@
 # ORDERING: must be first
 all: install
-	beagle
+	galapagos
 
 install:
 	go install

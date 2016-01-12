@@ -1,12 +1,12 @@
 package main
 
 import (
-	"beagle/island"
 	"fmt"
+	"galapagos/island"
 )
 
 func main() {
 	fmt.Println("Hello, playground")
-	myIsland := island.NewIsland()
-	fmt.Println(myIsland.Board)
+	s := island.NewEcosystem()
+	fmt.Println(s.Board)
 }
