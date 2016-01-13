@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"galapagos/garden"
 	"galapagos/island"
 	"log"
 	"os"
@@ -113,6 +114,10 @@ func main() {
 		writeLinerHistory(line)
 
 		switch {
+		case input == "m":
+			m := garden.NewMinion(4, 5)
+			fmt.Println(m)
+			return
 		case input == "q":
 			return
 		case input == "p":
