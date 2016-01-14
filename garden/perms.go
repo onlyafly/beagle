@@ -1,5 +1,7 @@
 package garden
 
+import "fmt"
+
 type permanent interface {
 	isActionable() bool
 	setActionable(b bool)
@@ -40,8 +42,14 @@ func (m *minionPerm) setActionable(b bool) {
 	m._isActionable = b
 }
 
+func (m *minionPerm) String() string {
+	return fmt.Sprintf("minion<%v/%v>", m.attack, m.health)
+}
+
 func (m *minionPerm) act(gs *gameState) {
 	m.setActionable(false)
+
+	fmt.Fprintf(gs.logger, "Attack from %v to %v for %v health\n", m, gs.pe, m.attack)
 
 	// attack enemy
 	gs.pe.health -= m.attack

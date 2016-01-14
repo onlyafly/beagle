@@ -9,7 +9,6 @@ import (
 )
 
 func init() {
-	fmt.Println("Seeding the random number generator...")
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
@@ -72,7 +71,7 @@ func Battle(da *Deck, db *Deck) int {
 		gs.pe = ps[(iTurn+1)%2]
 
 		// Begin turn
-		fmt.Fprintln(gs.logger, "Begin turn, player", gs.pc)
+		fmt.Fprintln(gs.logger, "Begin turn ", gs.pc)
 		gs.pc.manaCrystals++
 		gs.pc.manaAvailable = gs.pc.manaCrystals
 		for _, perm := range gs.pc.permanents {

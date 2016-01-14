@@ -62,8 +62,10 @@ func (mc *MinionCard) play(gs *gameState) {
 	// create a minion permanent on the current player's board
 	mp := newMinionPerm(mc)
 	gs.pc.permanents = append(gs.pc.permanents, mp)
+
+	fmt.Fprintln(gs.logger, "Play card", mp)
 }
 
 func (m *MinionCard) String() string {
-	return fmt.Sprintf("<M%d:%d/%d>", m.cost, m.Attack, m.Health)
+	return fmt.Sprintf("minionCard<%d:%d/%d>", m.cost, m.Attack, m.Health)
 }
