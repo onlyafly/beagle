@@ -1,20 +1,24 @@
 package garden
 
+import "fmt"
+
 type player struct {
+	name          string
 	health        int
 	manaCrystals  int
 	manaAvailable int
 	library       Cards
-	permanents    []permanent
+	permanents    permanents
 	hand          Cards
 }
 
-func newPlayer(d *Deck) *player {
+func newPlayer(name string, d *Deck) *player {
 	// Make l a copy of the cards in the deck
 	l := make([]Card, len(d.Cards))
 	copy(l, d.Cards)
 
 	p := &player{
+		name:    name,
 		health:  30,
 		library: l,
 	}
@@ -30,4 +34,8 @@ func (p *player) drawCards(n int) int {
 		p.library = p.library[1:]
 	}
 	return i
+}
+
+func (p *player) String() string {
+	return fmt.Sprintf("player<'%v',health=%d,crystals=%d>", p.name, p.health, p.manaCrystals)
 }

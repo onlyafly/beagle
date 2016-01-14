@@ -11,7 +11,7 @@ type Card interface {
 	play(gs *gameState)
 }
 
-func cardsWithinManaRange(cs []Card, low int, high int) Cards {
+func (cs Cards) withinManaRange(low int, high int) Cards {
 	matches := make([]Card, 0)
 	for _, c := range cs {
 		if low <= c.Cost() && c.Cost() <= high {
