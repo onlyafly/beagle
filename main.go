@@ -10,7 +10,11 @@ func main() {
 	db := garden.RandomDeck()
 
 	fmt.Println(da)
-	fmt.Println(db)
+	fmt.Println(garden.EncodeDeck(da))
+	fmt.Println(garden.DecodeDeck(garden.EncodeDeck(da)))
+	fmt.Println()
+	fmt.Println()
+	fmt.Println(garden.EncodeDeck(db))
 
 	r := garden.Battle(da, db)
 
