@@ -2,8 +2,6 @@ package garden
 
 import "math/rand"
 
-type Marker byte
-
 const (
 	maxByte           = 256
 	cardsInDeck       = 30
@@ -11,21 +9,37 @@ const (
 	uniqueMarkerCount = 2
 )
 
+type Marker byte
+type Genome []byte
+
 // NOTE: be sure to update uniqueMarkerCount, above
 const (
 	MARKER_NULL Marker = iota
 	MARKER_MINION_CARD
 )
 
-func RandomGenome() []byte {
-	bs := make([]byte, cardsInDeck*uniqueMarkerCount)
+func Reproduce(g Genome) Genome {
+	child := make([]byte, cardsInDeck*geneLength)
+	copy(child, g)
+
+	mutations := rand.Intn(5)
+	for im := 0; im < mutations; im++ {
+		locus := rand.Intn(cardsInDeck * geneLength)
+		child[locus] = byte(rand.Intn(maxByte))
+	}
+
+	return child
+}
+
+func RandomGenome() Genome {
+	bs := make([]byte, cardsInDeck*geneLength)
 	for i, _ := range bs {
 		bs[i] = byte(rand.Intn(maxByte))
 	}
 	return bs
 }
 
-func EncodeDeck(d *Deck) []byte {
+func EncodeDeck(d *Deck) Genome {
 	bs := make([]byte, 0)
 	for _, c := range d.Cards {
 		bs = append(bs, EncodeCard(c)...)
@@ -33,7 +47,7 @@ func EncodeDeck(d *Deck) []byte {
 	return bs
 }
 
-func EncodeCard(c Card) []byte {
+func EncodeCard(c Card) Genome {
 	switch v := c.(type) {
 	case *MinionCard:
 		return []byte{
@@ -50,7 +64,7 @@ func EncodeCard(c Card) []byte {
 	}
 }
 
-func DecodeDeck(bs []byte) *Deck {
+func DecodeDeck(bs Genome) *Deck {
 	d := new(Deck)
 	d.Cards = make([]Card, 0)
 
@@ -72,7 +86,7 @@ func DecodeDeck(bs []byte) *Deck {
 	return d
 }
 
-func DecodeMinionCard(bs []byte) (*MinionCard, int) {
+func DecodeMinionCard(bs Genome) (*MinionCard, int) {
 	m := NewMinionCard(int(bs[1]), int(bs[2]))
 	return m, geneLength
 }

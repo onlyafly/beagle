@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
-	"os"
 )
 
 func takeTurnActions(gs *gameState) {
@@ -46,9 +45,15 @@ type gameState struct {
 	pe     *player // enemy player
 }
 
-func Battle(da *Deck, db *Deck) int {
+type BattleResult struct {
+	Winner int
+	IsTied bool
+	Turns  int
+}
+
+func Battle(da *Deck, db *Deck, logger io.Writer) *BattleResult {
 	gs := new(gameState)
-	gs.logger = os.Stdout
+	gs.logger = logger
 	ps := []*player{newPlayer("A", da), newPlayer("B", db)}
 
 	// Prepare the players
@@ -80,10 +85,19 @@ func Battle(da *Deck, db *Deck) int {
 		for i, p := range ps {
 			if p.health <= 0 {
 				// p has lost, return the other player's id
-				return (i + 1) % 2
+				winningPlayerId := (i + 1) % 2
+				return &BattleResult{
+					Winner: winningPlayerId,
+					IsTied: false,
+					Turns:  gs.turn,
+				}
 			}
 		}
 	}
 
-	return -1
+	return &BattleResult{
+		Winner: -1,
+		IsTied: true,
+		Turns:  gs.turn,
+	}
 }
