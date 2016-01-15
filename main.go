@@ -40,13 +40,14 @@ func (c *competitor) String() string {
 
 type statResults struct {
 	competitorWithMostWins *competitor
+	avgTurns               float32
 }
 
 func (sr *statResults) String() string {
-	return fmt.Sprintf("(RESULTS: %v)", sr.competitorWithMostWins)
+	return fmt.Sprintf("STATS:\nAVG TURNS: %v\n TOP COMPETITOR: %v", sr.avgTurns, sr.competitorWithMostWins)
 }
 
-func stats(arena []*competitor) *statResults {
+func stats(arena []*competitor, rs []*garden.BattleResult) *statResults {
 	iCompetitorWithMostWins := 0
 	mostWins := 0
 
@@ -57,8 +58,15 @@ func stats(arena []*competitor) *statResults {
 		}
 	}
 
+	totalTurns := 0
+	for _, r := range rs {
+		totalTurns += r.Turns
+	}
+	averageTurns := float32(totalTurns) / float32(len(rs))
+
 	return &statResults{
 		competitorWithMostWins: arena[iCompetitorWithMostWins],
+		avgTurns:               averageTurns,
 	}
 }
 
@@ -70,7 +78,9 @@ func main() {
 		}
 	}
 
-	for generation := 0; generation < 1000; generation++ {
+	for generation := 0; generation < 5000; generation++ {
+
+		battleResults := make([]*garden.BattleResult, 500)
 
 		splitPoint := len(arena) / 2
 		for ic1 := 0; ic1 < splitPoint; ic1++ {
@@ -79,11 +89,11 @@ func main() {
 			da := garden.DecodeDeck(c1.g)
 			db := garden.DecodeDeck(c2.g)
 
-			battleResult := garden.Battle(da, db, &junk{})
+			battleResults[ic1] = garden.Battle(da, db, &junk{})
 
 			winnerIndex := 0
 			loserIndex := 0
-			if battleResult.Winner == 0 {
+			if battleResults[ic1].Winner == 0 {
 				winnerIndex = ic1
 				loserIndex = ic1 + splitPoint
 			} else {
@@ -107,12 +117,11 @@ func main() {
 		// Show stats for this generation
 		if generation%10 == 0 {
 			fmt.Println("GENERATION", generation)
-			fmt.Println(stats(arena))
+			fmt.Println(stats(arena, battleResults))
 		}
 	}
 
 	// Show the one with the most wins
 
 	fmt.Println("AND THE RESULT IS...")
-	fmt.Println(stats(arena))
 }

@@ -87,7 +87,7 @@ func DecodeDeck(bs Genome) *Deck {
 }
 
 func DecodeMinionCard(bs Genome) (*MinionCard, int) {
-	m := NewMinionCard(int(bs[1]), int(bs[2]))
+	m := NewMinionCard(int(bs[1]%20), int(bs[2]%20+1))
 	return m, geneLength
 }
 
