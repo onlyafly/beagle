@@ -1,8 +1,12 @@
 package garden
 
+import "math/rand"
+
 type Marker byte
 
 const (
+	maxByte           = 256
+	cardsInDeck       = 30
 	geneLength        = 3
 	uniqueMarkerCount = 2
 )
@@ -12,6 +16,14 @@ const (
 	MARKER_NULL Marker = iota
 	MARKER_MINION_CARD
 )
+
+func RandomGenome() []byte {
+	bs := make([]byte, cardsInDeck*uniqueMarkerCount)
+	for i, _ := range bs {
+		bs[i] = byte(rand.Intn(maxByte))
+	}
+	return bs
+}
 
 func EncodeDeck(d *Deck) []byte {
 	bs := make([]byte, 0)

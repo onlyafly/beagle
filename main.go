@@ -6,15 +6,13 @@ import (
 )
 
 func main() {
-	da := garden.RandomDeck()
-	db := garden.RandomDeck()
+	ga := garden.RandomGenome()
+	gb := garden.RandomGenome()
+	da := garden.DecodeDeck(ga)
+	db := garden.DecodeDeck(gb)
 
 	fmt.Println(da)
-	fmt.Println(garden.EncodeDeck(da))
-	fmt.Println(garden.DecodeDeck(garden.EncodeDeck(da)))
-	fmt.Println()
-	fmt.Println()
-	fmt.Println(garden.EncodeDeck(db))
+	fmt.Println(db)
 
 	r := garden.Battle(da, db)
 

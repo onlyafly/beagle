@@ -23,21 +23,23 @@ func (cs Cards) withinManaRange(low int, high int) Cards {
 
 type Cards []Card
 
-func (cs Cards) Shuffle() {
+func (cs Cards) Shuffle() Cards {
 	// The Fisher-Yates shuffling algorithm: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 	for i := range cs {
 		j := rand.Intn(i + 1)
 		cs[i], cs[j] = cs[j], cs[i]
 	}
+	return cs
 }
 
-func (cs Cards) RemoveCard(other Card) {
+func (cs Cards) RemoveCard(other Card) Cards {
 	for i, c := range cs {
 		if c == other {
 			cs = append(cs[:i], cs[i+1:]...)
-			return
+			return cs
 		}
 	}
+	return cs
 }
 
 type MinionCard struct {

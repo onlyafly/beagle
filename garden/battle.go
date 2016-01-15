@@ -5,12 +5,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
-	"time"
 )
-
-func init() {
-	rand.Seed(time.Now().UTC().UnixNano())
-}
 
 func takeTurnActions(gs *gameState) {
 	for {
@@ -18,11 +13,11 @@ func takeTurnActions(gs *gameState) {
 
 		if gs.pc.manaAvailable > 0 {
 			playableCards := gs.pc.hand.withinManaRange(0, gs.pc.manaAvailable)
-			playableCards.Shuffle()
+			playableCards = playableCards.Shuffle()
 
 			if len(playableCards) > 0 {
 				c := playableCards[0]
-				gs.pc.hand.RemoveCard(c)
+				gs.pc.hand = gs.pc.hand.RemoveCard(c)
 
 				c.play(gs)
 				actionCount++
@@ -58,7 +53,7 @@ func Battle(da *Deck, db *Deck) int {
 
 	// Prepare the players
 	for _, p := range ps {
-		p.library.Shuffle()
+		p.library = p.library.Shuffle()
 		p.drawCards(3)
 	}
 
