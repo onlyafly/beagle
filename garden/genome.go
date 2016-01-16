@@ -7,10 +7,11 @@ const (
 	cardsInDeck       = 30
 	geneLength        = 3
 	uniqueMarkerCount = 2
+	headerLength      = 1
+	genomeSize        = headerLength + cardsInDeck*geneLength
 )
 
 type Marker byte
-type Genome []byte
 
 // NOTE: be sure to update uniqueMarkerCount, above
 const (
@@ -18,8 +19,19 @@ const (
 	MARKER_MINION_CARD
 )
 
-func Reproduce(g Genome) Genome {
-	child := make([]byte, cardsInDeck*geneLength)
+type Genome []byte
+type GeneticCode []byte
+
+func NewRandomGenome() Genome {
+	bs := make([]byte, genomeSize)
+	for i, _ := range bs {
+		bs[i] = byte(rand.Intn(maxByte))
+	}
+	return bs
+}
+
+func (g Genome) Replicate() Genome {
+	child := make([]byte, genomeSize)
 	copy(child, g)
 
 	mutations := rand.Intn(5)
@@ -31,23 +43,20 @@ func Reproduce(g Genome) Genome {
 	return child
 }
 
-func RandomGenome() Genome {
-	bs := make([]byte, cardsInDeck*geneLength)
-	for i, _ := range bs {
-		bs[i] = byte(rand.Intn(maxByte))
-	}
-	return bs
-}
-
-func EncodeDeck(d *Deck) Genome {
+func (d *Deck) ToGenome() Genome {
 	bs := make([]byte, 0)
+
+	// Header
+	bs = append(bs, d.Endurance)
+
+	// Cards
 	for _, c := range d.Cards {
-		bs = append(bs, EncodeCard(c)...)
+		bs = append(bs, encodeCard(c)...)
 	}
 	return bs
 }
 
-func EncodeCard(c Card) Genome {
+func encodeCard(c Card) GeneticCode {
 	switch v := c.(type) {
 	case *MinionCard:
 		return []byte{
@@ -64,14 +73,18 @@ func EncodeCard(c Card) Genome {
 	}
 }
 
-func DecodeDeck(bs Genome) *Deck {
+func (bs Genome) ToDeck() *Deck {
 	d := new(Deck)
 	d.Cards = make([]Card, 0)
 
-	for i := 0; i < len(bs); /*empty*/ {
+	// Header
+	d.Endurance = bs[0]
+
+	// Cards
+	for i := 1; i < len(bs); /*empty*/ {
 		switch decodeMarker(bs[i]) {
 		case MARKER_MINION_CARD:
-			c, byteLen := DecodeMinionCard(bs[i:])
+			c, byteLen := decodeMinionCard(GeneticCode(bs[i:]))
 			d.Cards = append(d.Cards, c)
 			i += byteLen
 		case MARKER_NULL:
@@ -86,7 +99,7 @@ func DecodeDeck(bs Genome) *Deck {
 	return d
 }
 
-func DecodeMinionCard(bs Genome) (*MinionCard, int) {
+func decodeMinionCard(bs GeneticCode) (*MinionCard, int) {
 	m := NewMinionCard(int(bs[1]%20), int(bs[2]%20+1))
 	return m, geneLength
 }
