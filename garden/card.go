@@ -69,5 +69,5 @@ func (mc *MinionCard) play(gs *gameState) {
 }
 
 func (m *MinionCard) String() string {
-	return fmt.Sprintf("minionCard<%d:%d/%d>", m.cost, m.Attack, m.Health)
+	return fmt.Sprintf("M<%d:%d/%d>", m.cost, m.Attack, m.Health)
 }
