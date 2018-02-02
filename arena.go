@@ -3,10 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"galapagos/garden"
 	"math/rand"
 	"sort"
 	"strconv"
+
+	"github.com/onlyafly/galapagos/garden"
 )
 
 const (

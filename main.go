@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"galapagos/Godeps/_workspace/src/github.com/peterh/liner"
+	"github.com/peterh/liner"
 )
 
 const (
